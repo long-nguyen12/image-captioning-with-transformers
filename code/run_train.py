@@ -6,7 +6,7 @@ from torchvision.transforms import Normalize, Compose
 from torch.optim import Adam
 from torch.optim.lr_scheduler import StepLR
 
-from models.cnn_encoder import ImageEncoder
+from models.poolformer import ImageEncoder
 from models.IC_encoder_decoder.transformer import Transformer
 
 from dataset.dataloader import HDF5Dataset, collate_padd
