@@ -19,7 +19,7 @@ class Flickr30kDataset(Dataset):
     imgpath: full path to image file
     """
 
-    def __init__(self, dataset_base_path='data/flickr30k/',
+    def __init__(self, dataset_base_path='code/data/flickr30k/',
                  vocab_set=None, dist='val',
                  startseq="<start>", endseq="<end>", unkseq="<unk>", padseq="<pad>",
                  transformations=None,
@@ -31,9 +31,9 @@ class Flickr30kDataset(Dataset):
         self.images_path = dataset_base_path + 'flickr30k_images/'
 
         self.dist_list = {
-            'train': 'data/flickr30k/flickr30k.train.txt',
-            'val': 'data/flickr30k/flickr30k.val.txt',
-            'test': 'data/flickr30k/flickr30k.test.txt'
+            'train': 'code/data/flickr30k/flickr30k.train.txt',
+            'val': 'code/data/flickr30k/flickr30k.val.txt',
+            'test': 'code/data/flickr30k/flickr30k.test.txt'
         }
 
         self.load_img_to_memory = load_img_to_memory

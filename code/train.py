@@ -12,16 +12,16 @@ from models.poolformer import ImageEncoder
 from models.IC_encoder_decoder.transformer import Transformer
 
 from dataset.dataloader import HDF5Dataset, collate_padd
-from torchtext.vocab import Vocab
+# from torchtext.vocab import Vocab
 
 from trainer import Trainer
 from utils.train_utils import parse_arguments, seed_everything, load_json
 from utils.gpu_cuda_helper import select_device
-from data.flickr30k import Flickr30kDataset
+from datasets.flickr30k import Flickr30kDataset
 
 
-def get_datasets(dataset_dir: str, pid_pad: float):
-    DATASET_BASE_PATH = 'data/flickr30k/'
+def get_datasets():
+    DATASET_BASE_PATH = 'code/data/flickr30k/'
 
     train_dataset = Flickr30kDataset(dataset_base_path=DATASET_BASE_PATH, dist='train', device=device,
                                      return_type='tensor',
@@ -84,6 +84,7 @@ if __name__ == "__main__":
 
     # load vocab
     min_freq = config["min_freq"]
+    pad_id = vocab.stoi["<pad>"]
 
     # SEED
     SEED = config["seed"]
@@ -111,7 +112,7 @@ if __name__ == "__main__":
 
     transformer_hyperparms = config["hyperparams"]["transformer"]
     transformer_hyperparms["vocab_size"] = vocab_size
-    transformer_hyperparms["pad_id"] = "<pad>"
+    transformer_hyperparms["pad_id"] = pad_id
     transformer_hyperparms["img_encode_size"] = image_seq_len
     transformer_hyperparms["max_len"] = max_len - 1
 
@@ -125,7 +126,7 @@ if __name__ == "__main__":
     weights = vocab.vectors
     transformer.decoder.cptn_emb.from_pretrained(weights,
                                                  freeze=True,
-                                                 padding_idx="<pad>")
+                                                 padding_idx=pad_id)
     list(transformer.decoder.cptn_emb.parameters())[0].requires_grad = False
 
     # Optimizers and schedulers
@@ -146,7 +147,7 @@ if __name__ == "__main__":
     train = Trainer(optims=[image_encoder_optim, transformer_optim],
                     schedulers=[image_scheduler, transformer_scheduler],
                     device=device,
-                    pad_id="<pad>",
+                    pad_id=pad_id,
                     resume=resume,
                     checkpoints_path=config["pathes"]["checkpoint"],
                     **config["train_parms"])

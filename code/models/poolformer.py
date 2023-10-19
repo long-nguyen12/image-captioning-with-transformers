@@ -47,7 +47,7 @@ class MLP(nn.Module):
         out_dim = out_dim or dim
         self.fc1 = nn.Conv2d(dim, hidden_dim, 1)
         # self.act = nn.GELU()
-        self.act = nn.StarReLU()
+        self.act = StarReLU()
         self.fc2 = nn.Conv2d(hidden_dim, out_dim, 1)
 
     def forward(self, x: Tensor) -> Tensor:
@@ -135,7 +135,7 @@ class ImageEncoder(nn.Module):
         # pretrained ImageNet ResNet-101
         # Remove last linear and pool layers
         self.backbone = PoolFormer('S24')
-        self.backbone.load_state_dict(torch.load('/code/checkpoints/poolformer_s24.pth', map_location='cpu'), strict=False)
+        self.backbone.load_state_dict(torch.load('/home/ai/lab208/image-cationing/image_captioning_with_transformers/code/checkpoints/poolformer_s24.pth', map_location='cpu'), strict=False)
 
         self.downsampling = nn.Conv2d(in_channels=2048,
                                       out_channels=embed_dim,
